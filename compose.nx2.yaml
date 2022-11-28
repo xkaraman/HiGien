@@ -1,0 +1,52 @@
+# version: "3.9"
+
+services:
+  zed2:
+    image: zed2_ros2
+    network_mode: "host"
+    # docker compose run image /bin/bash
+    # stdin_open: true
+    # tty: true
+    privileged: true
+    command: ros2 launch zed_wrapper zed2.launch.py
+    # command: ros2 run demo_nodes_cpp talker
+    # # devices:
+    # #   - "/dev/rplidar:/dev/rplidar" # Lidar
+    # #   - "/dev/ttyUSB0:/dev/ttyUSB0" # Lidar?
+    # #   - "/dev/ttyUSB1:/dev/ttyUSB1" # Disinfection Board
+    # volumes:
+    #   - type: volume
+    #     source: ~/ros2_workspaces
+    #     target: /ros2_workspaces
+    #     volume:
+    #       nocopy: true
+    runtime: nvidia
+    # # entrypoint:
+    # # env_file:
+    # # environment:
+    # restart: unless-stopped
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
+
+  lidar2:
+    image: husarion/rplidar:humble
+    devices: 
+      - /dev/ttyUSB0:/dev/ttyUSB0
+    # command: ros2 launch sllidar_ros2 sllidar_s2_launch.py
+  
+  nav2:
+    image: nvcr.io/nvidia/isaac/ros:aarch64-humble-nav2_6dfaf7adbe190f1181c3a0a2f2418760
+    network_mode: "host"
+    runtime: nvidia
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [ gpu ]
