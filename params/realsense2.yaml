@@ -1,0 +1,9 @@
+camera:
+  camera:
+    ros__parameters:
+      enable_depth: true
+      enable_sync: true
+      align_depth:
+        enable: true
+      enable_fisheye1: false
+      enable_fisheye2: false
